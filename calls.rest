@@ -1,0 +1,10 @@
+### GET (Retrieve all messages)
+GET http://localhost:3000/getAllMessages
+
+### POST (Send message to the server)
+POST http://localhost:3000/createMessage
+Content-Type: application/json; charset=utf-8
+
+{
+    "messages":"Test 3"
+}
