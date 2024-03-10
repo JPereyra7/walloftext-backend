@@ -10,7 +10,7 @@ const uri =
 const client = new MongoClient(uri);
 app.use(express.json());
 //GET
-app.get("/api/walloftexts", async (req, res) => {
+app.get("/walloftexts", async (req, res) => {
     try {
       await client.connect();
       const database = client.db("walloftext");
