@@ -1,64 +1,52 @@
-const express = require('express');
-const cors = require('cors');
-const session = require('express-session');
-const { walloftext } = require("./models");
-const { retrieveMessage } = require("./Controllers/messageController.js");
-const { createMessage } = require("./Controllers/messageController.js");
-const migrationHelper = require("./migrationhelper");
-// Sequelize setup
-const { Sequelize } = require('sequelize');
-
-// Internal database URL provided by Render.com
-const internalDatabaseUrl = 'postgres://messages:Fh1xu8WUWccJO7ugNZGG7BJoTUgy019E@dpg-cnn0rb0l6cac73fec1hg-a/walloftext';
-
-// External database URL provided by Render.com
-const externalDatabaseUrl = 'postgres://messages:Fh1xu8WUWccJO7ugNZGG7BJoTUgy019E@dpg-cnn0rb0l6cac73fec1hg-a.frankfurt-postgres.render.com/walloftext';
-
-// Create a new Sequelize instance using the database URL
-const sequelize = new Sequelize(externalDatabaseUrl, {
-  dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false // Adjust for production
-    }
-  }
-});
-
-// Test the database connection
-async function testDatabaseConnection() {
-  try {
-    await sequelize.authenticate();
-    console.log('Connection to the database has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-}
-
-// Call the function to test the database connection
-testDatabaseConnection();
-
-// Express app setup
+const express = require("express");
+const { MongoClient } = require("mongodb");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; //Radiofrekvens
+// const migrationHelper = require("./migrationhelper");
 
+const uri =
+"mongodb+srv://jpempire1777:Jolli9393!@cluster0.ijoagk8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+const client = new MongoClient(uri);
 app.use(express.json());
+//GET
+app.get("/api/walloftexts", async (req, res) => {
+    try {
+      await client.connect();
+      const database = client.db("walloftext");
+      const collection = database.collection("walloftexts");
+      const walloftexts = await collection.find({}).toArray();
+      res.json(walloftexts);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    } finally {
+      await client.close();
+    }
+  });
+  
+  //POST
+  app.post("/walloftexts", async (req, res) => {
+      try {
+        await client.connect();
+        const database = client.db("walloftext");
+        const collection = database.collection("walloftexts");
+        const result = await collection.insertOne(req.body);
+          // If the insertion was successful, send a 200 response
+          res.status(200).json({ message: "Message Successfully Added!" });
+       
+      } catch (err) {
+        // If an error occurred during the insertion process, send a 500 response
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+      } finally {
+        // Close the MongoDB client connection
+        await client.close();
+      }
+    });
+  
 
-app.use(
-    cors({
-        origin: "http://localhost:5501",
-        credentials: true,
-    })
-);
-
-// Retrieving messages from DB
-app.get("/getAllMessages", retrieveMessage);
-
-app.post("/createMessage", createMessage);
-
-// Start server
 app.listen(port, async () => {
-    await migrationHelper.migrate();
+    // await migrationHelper.migrate();
     console.log(`Listening on port 👂🏽 ${port}`);
 });
-
