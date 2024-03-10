@@ -1,24 +1,24 @@
 require("dotenv").config();
 module.exports = {
   development: {
-    username: "root",
+    username: DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: "walloftext",
-    host: "127.0.0.1",
-    dialect: "mysql",
+    host: "cluster0.ijoagk8.mongodb.net",
+    dialect: "mongodb",
   },
   test: {
-    username: "root",
+    username: DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: "walloftext",
-    host: "127.0.0.1",
-    dialect: "mysql",
+    host: "cluster0.ijoagk8.mongodb.net",
+    dialect: "mongodb",
   },
   production: {
-    username: "root",
-    password: process.env.DB_PASSWORD,
+    username: DB_USERNAME,
+    password: DB_PASSWORD,
     database: "walloftext",
-    host: "127.0.0.1",
-    dialect: "mysql",
+    host: "cluster0.ijoagk8.mongodb.net",
+    dialect: "mongodb",
   },
 };
