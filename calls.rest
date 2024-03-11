@@ -8,3 +8,6 @@ Content-Type: application/json; charset=utf-8
 {
     "messages":"Test 6"
 } 
+
+### Delete a message by ID
+DELETE https://walloftext-986d8e27f640.herokuapp.com/walloftexts/65ee38a9a6132931e4ae3a93

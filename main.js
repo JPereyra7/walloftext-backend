@@ -59,6 +59,27 @@ app.post("/walloftexts", async (req, res) => {
   }
 });
 
+// DELETE route to delete a message by its ObjectId
+app.delete("/walloftexts/:id", async (req, res) => {
+  try {
+    const database = client.db("walloftext");
+    const collection = database.collection("walloftexts");
+    const { id } = req.params; // Retrieve the ID from the request parameters
+    const result = await collection.deleteOne({ _id: ObjectId(id) }); // Convert the id to ObjectId
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: "Message Successfully Deleted!" });
+    } else {
+      res.status(404).json({ message: "Message Not Found" });
+    }
+  } catch (err) {
+    console.error("Error deleting message:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Listening on port 👂🏽 ${port}`);
 });
+
+
