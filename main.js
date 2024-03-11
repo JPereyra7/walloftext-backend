@@ -1,6 +1,11 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
 const app = express();
+
+// Use CORS middleware
+const cors = require('cors');
+app.use(cors());
+
 const port = process.env.PORT || 3000; //Radiofrekvens
 // const migrationHelper = require("./migrationhelper");
 
