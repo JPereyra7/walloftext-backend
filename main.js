@@ -9,6 +9,10 @@ app.use(cors());
 const port = process.env.PORT || 3000; //Radiofrekvens
 // const migrationHelper = require("./migrationhelper");
 
+app.use(cors({
+  origin: 'https://wall-of-text.netlify.app'
+}));
+
 const uri =
 "mongodb+srv://jpempire1777:Jolli9393!@cluster0.ijoagk8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
